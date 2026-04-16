@@ -1,7 +1,7 @@
 """
 Modelo Tenant - Representa cada cliente/agencia en la plataforma
 """
-from sqlalchemy import Column, String, DateTime, func, Index
+from sqlalchemy import Column, String, DateTime, Integer, func, Index
 from sqlalchemy.orm import relationship
 from models.base import Base, UUIDMixin, TimestampMixin
 from uuid import UUID
