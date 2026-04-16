@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m venv .venv)",
+      "Bash(source .venv/bin/activate)",
+      "Bash(pip install:*)",
+      "Bash(python3 -m venv .venv)",
+      "Bash(pip3 --version)",
+      "Bash(python3 -c \"from openai import AsyncOpenAI; print\\(''openai OK''\\)\")",
+      "Bash(python3 -c \"from fastapi import FastAPI; print\\(''fastapi OK''\\)\")",
+      "Bash(python3 -c \"from models.property import PropertyData; print\\(''models OK''\\)\")",
+      "Bash(python3 -c \"from services.openai_service import generate_content; print\\(''service OK''\\)\")",
+      "Bash(python3 -c \"import main; print\\(''main OK''\\)\")",
+      "Bash(timeout 5 python3 main.py)",
+      "Bash(python3 -c \":*)",
+      "Bash(python3 main.py)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(python3 -c \"from routers.generate import router; print\\(''router OK''\\)\")"
+    ]
+  }
+}

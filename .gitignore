@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+*.db
+*.sqlite
+uploads/*
+!uploads/.gitkeep
+.DS_Store
+*.swp

@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: listapro_postgres
+    environment:
+      POSTGRES_USER: listapro_user
+      POSTGRES_PASSWORD: listapro_secure_dev_password
+      POSTGRES_DB: listapro_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U listapro_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - listapro_network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: listapro_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@listapro.local
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - listapro_network
+
+volumes:
+  postgres_data:
+
+networks:
+  listapro_network:
+    driver: bridge

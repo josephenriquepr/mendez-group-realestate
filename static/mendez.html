@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mendez Group — Tu inmobiliaria de confianza en Puerto Rico. Propiedades en venta y alquiler, casas, apartamentos, terrenos y locales comerciales.">
+  <title>Mendez Group | Inmobiliaria Puerto Rico</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- AOS CSS -->
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/static/css/mendez.css">
+  <link rel="icon" type="image/png" href="/static/img/logo-mendez-group.png">
+</head>
+<body>
+
+  <div id="nav-sentinel"></div>
+
+  <!-- NAV -->
+  <nav class="nav" id="navbar">
+    <div class="nav__container">
+      <a href="#inicio" class="nav__logo">
+        <img src="/static/img/logo-mendez-group.png" alt="Mendez Group" class="nav__logo-img">
+        <span class="nav__logo-text">Mendez Group</span>
+      </a>
+      <ul class="nav__links" id="navLinks">
+        <li><a href="#inicio"       class="nav__link">Inicio</a></li>
+        <li><a href="#propiedades"  class="nav__link">Propiedades</a></li>
+        <li><a href="#calculadora"  class="nav__link">Calculadora</a></li>
+        <li><a href="#contacto"     class="nav__link">Contacto</a></li>
+      </ul>
+      <button class="nav__hamburger" id="hamburger" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="hero__bg" id="heroBg"></div>
+    <div class="hero__overlay"></div>
+    <div class="hero__content">
+      <span class="hero__badge" data-aos="fade-down" data-aos-duration="700">🏝️ Puerto Rico</span>
+      <h1 class="hero__title" data-aos="fade-up" data-aos-duration="900" data-aos-delay="100">
+        Tu hogar ideal<br>
+        <span class="hero__title--accent">te está esperando</span>
+      </h1>
+      <p class="hero__subtitle" data-aos="fade-up" data-aos-duration="900" data-aos-delay="200">
+        Descubre las mejores propiedades en venta y alquiler de la mano de expertos que conocen cada rincón de la isla.
+      </p>
+      <div class="hero__cta" data-aos="fade-up" data-aos-duration="900" data-aos-delay="300">
+        <a href="#propiedades" class="btn btn--primary">Ver Propiedades</a>
+        <a href="#calculadora" class="btn btn--ghost">Calculadora de Hipoteca</a>
+      </div>
+      <div class="hero__stats" data-aos="fade-up" data-aos-delay="500">
+        <div class="hero__stat">
+          <span class="hero__stat-num" data-target="500">0</span><span style="color:var(--color-gold);font-weight:800;">+</span>
+          <span class="hero__stat-label">Propiedades</span>
+        </div>
+        <div class="hero__stat-divider"></div>
+        <div class="hero__stat">
+          <span class="hero__stat-num" data-target="15">0</span><span style="color:var(--color-gold);font-weight:800;">+</span>
+          <span class="hero__stat-label">Años de experiencia</span>
+        </div>
+        <div class="hero__stat-divider"></div>
+        <div class="hero__stat">
+          <span class="hero__stat-num" data-target="1200">0</span><span style="color:var(--color-gold);font-weight:800;">+</span>
+          <span class="hero__stat-label">Clientes satisfechos</span>
+        </div>
+      </div>
+    </div>
+    <a href="#propiedades" class="hero__scroll"><span class="hero__scroll-dot"></span></a>
+  </section>
+
+  <!-- PROPERTIES -->
+  <section class="properties" id="propiedades">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-badge">Portafolio</span>
+        <h2 class="section-title">Propiedades Disponibles</h2>
+        <p class="section-subtitle">Explora nuestro inventario actualizado de casas, apartamentos, terrenos y más.</p>
+      </div>
+
+      <div class="filters" data-aos="fade-up" data-aos-delay="100">
+        <select class="filter-select" id="filterTipo">
+          <option value="">Tipo de propiedad</option>
+          <option value="Casa">Casa</option>
+          <option value="Apartamento">Apartamento</option>
+          <option value="Penthouse">Penthouse</option>
+          <option value="Solar">Solar</option>
+          <option value="Comercial">Comercial</option>
+        </select>
+        <select class="filter-select" id="filterOp">
+          <option value="">Operación</option>
+          <option value="Venta">Venta</option>
+          <option value="Alquiler">Alquiler</option>
+        </select>
+        <input type="text" class="filter-input" id="filterPueblo" placeholder="🔍  Pueblo o dirección...">
+        <button class="btn btn--secondary btn--sm" id="clearFilters">Limpiar</button>
+      </div>
+
+      <!-- Skeleton -->
+      <div class="properties__skeleton" id="skeletonLoader">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+
+      <!-- Grid -->
+      <div class="properties__grid hidden" id="propertiesGrid"></div>
+
+      <!-- Empty -->
+      <div class="properties__empty hidden" id="emptyState">
+        <div class="empty-icon">🏠</div>
+        <h3>No se encontraron propiedades</h3>
+        <p>Prueba con otros filtros o contáctanos para ver más opciones.</p>
+        <a href="#contacto" class="btn btn--primary">Contáctanos</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MORTGAGE CALCULATOR -->
+  <section class="calculator" id="calculadora">
+    <div class="container">
+      <div class="section-header section-header--light" data-aos="fade-up">
+        <span class="section-badge section-badge--gold">Herramienta</span>
+        <h2 class="section-title section-title--light">Calculadora de Hipoteca</h2>
+        <p class="section-subtitle section-subtitle--light">Estima tu pago mensual en segundos. Mueve los sliders para ajustar.</p>
+      </div>
+
+      <div class="calc__card" data-aos="zoom-in" data-aos-duration="800">
+        <!-- Inputs -->
+        <div class="calc__inputs">
+
+          <div class="calc__group">
+            <label class="calc__label" for="precioSlider">
+              Precio del inmueble
+              <span class="calc__value" id="precioDisplay">$350,000</span>
+            </label>
+            <input type="range" class="calc__slider" id="precioSlider"
+                   min="50000" max="2000000" step="5000" value="350000">
+            <div class="calc__range-labels"><span>$50K</span><span>$2M</span></div>
+          </div>
+
+          <div class="calc__group">
+            <label class="calc__label" for="downSlider">
+              Inicial (Down Payment)
+              <span class="calc__value" id="downDisplay">20% — $70,000</span>
+            </label>
+            <input type="range" class="calc__slider" id="downSlider"
+                   min="3" max="50" step="1" value="20">
+            <div class="calc__range-labels"><span>3%</span><span>50%</span></div>
+          </div>
+
+          <div class="calc__group">
+            <label class="calc__label" for="tasaSlider">
+              Tasa de interés anual
+              <span class="calc__value" id="tasaDisplay">6.5%</span>
+            </label>
+            <input type="range" class="calc__slider" id="tasaSlider"
+                   min="1" max="15" step="0.1" value="6.5">
+            <div class="calc__range-labels"><span>1%</span><span>15%</span></div>
+          </div>
+
+          <div class="calc__group">
+            <label class="calc__label">Plazo del préstamo</label>
+            <div class="calc__toggle">
+              <button class="toggle-btn" data-years="15">15 años</button>
+              <button class="toggle-btn active" data-years="20">20 años</button>
+              <button class="toggle-btn" data-years="30">30 años</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Result -->
+        <div class="calc__result">
+          <div class="calc__result-header">Pago mensual estimado</div>
+          <div class="calc__monthly">$<span id="monthlyPayment">1,972</span></div>
+
+          <div class="calc__breakdown">
+            <div class="calc__breakdown-item">
+              <span class="calc__breakdown-label">Monto del préstamo</span>
+              <span class="calc__breakdown-val" id="loanAmount">$280,000</span>
+            </div>
+            <div class="calc__breakdown-item">
+              <span class="calc__breakdown-label">Total de intereses</span>
+              <span class="calc__breakdown-val" id="totalInterest">$193,289</span>
+            </div>
+            <div class="calc__breakdown-item calc__breakdown-item--total">
+              <span class="calc__breakdown-label">Costo total</span>
+              <span class="calc__breakdown-val" id="totalCost">$473,289</span>
+            </div>
+          </div>
+
+          <div class="calc__bar">
+            <div class="calc__bar-fill" id="principalBar" style="width:59%"><span>Capital</span></div>
+            <div class="calc__bar-interest" id="interestBar" style="width:41%"><span>Interés</span></div>
+          </div>
+
+          <a href="#contacto" class="btn btn--gold btn--full">Hablar con un asesor →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contacto">
+    <div class="container">
+      <div class="section-header" data-aos="fade-up">
+        <span class="section-badge">Contacto</span>
+        <h2 class="section-title">¿Listo para dar el paso?</h2>
+        <p class="section-subtitle">Nuestro equipo está disponible para guiarte en cada etapa del proceso.</p>
+      </div>
+      <div class="contact__grid">
+        <div class="contact__info" data-aos="fade-right">
+          <div class="contact__item">
+            <span class="contact__icon">📞</span>
+            <div><strong>Teléfono</strong><p>(787) 555-0100</p></div>
+          </div>
+          <div class="contact__item">
+            <span class="contact__icon">✉️</span>
+            <div><strong>Email</strong><p>info@mendezgroup.pr</p></div>
+          </div>
+          <div class="contact__item">
+            <span class="contact__icon">📍</span>
+            <div><strong>Oficina</strong><p>San Juan, Puerto Rico</p></div>
+          </div>
+          <div class="contact__item">
+            <span class="contact__icon">🕐</span>
+            <div><strong>Horario</strong><p>Lun–Vie: 9am–6pm<br>Sáb: 10am–2pm</p></div>
+          </div>
+        </div>
+
+        <form class="contact__form" id="contactForm" data-aos="fade-left">
+          <div class="form-row">
+            <input type="text"  class="form-input" placeholder="Tu nombre completo" required>
+            <input type="tel"   class="form-input" placeholder="Teléfono de contacto">
+          </div>
+          <input type="email" class="form-input" placeholder="Correo electrónico" required>
+          <select class="form-input" style="-webkit-appearance:none;cursor:pointer;">
+            <option value="" disabled selected>¿En qué estás interesado?</option>
+            <option>Comprar una propiedad</option>
+            <option>Alquilar una propiedad</option>
+            <option>Vender mi propiedad</option>
+            <option>Información sobre hipotecas</option>
+            <option>Otro</option>
+          </select>
+          <textarea class="form-input form-textarea"
+                    placeholder="Cuéntanos más sobre lo que buscas..." rows="4"></textarea>
+          <button type="submit" class="btn btn--primary btn--full">Enviar Mensaje</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <img src="/static/img/logo-mendez-group.png" alt="Mendez Group" class="footer__logo">
+          <p class="footer__tagline">Tu propiedad ideal en Puerto Rico, con la experiencia y dedicación que mereces.</p>
+        </div>
+        <div class="footer__col">
+          <h4>Navegación</h4>
+          <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#propiedades">Propiedades</a></li>
+            <li><a href="#calculadora">Calculadora</a></li>
+            <li><a href="#contacto">Contacto</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Propiedades</h4>
+          <ul>
+            <li><a href="#propiedades">Casas en Venta</a></li>
+            <li><a href="#propiedades">Apartamentos</a></li>
+            <li><a href="#propiedades">Solares</a></li>
+            <li><a href="#propiedades">Alquileres</a></li>
+            <li><a href="#propiedades">Comerciales</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Contacto</h4>
+          <ul>
+            <li>📞 (787) 555-0100</li>
+            <li>✉️ info@mendezgroup.pr</li>
+            <li>📍 San Juan, PR</li>
+            <li>🕐 Lun–Vie 9am–6pm</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p>© 2025 Mendez Group. Todos los derechos reservados.</p>
+        <p>Licencia de Bienes Raíces Puerto Rico</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PROPERTY MODAL -->
+  <div class="modal" id="propertyModal" role="dialog" aria-modal="true">
+    <div class="modal__backdrop" id="modalBackdrop"></div>
+    <div class="modal__content">
+      <button class="modal__close" id="modalClose" aria-label="Cerrar">✕</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- AOS JS -->
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <!-- Custom JS -->
+  <script src="/static/js/mendez.js"></script>
+</body>
+</html>

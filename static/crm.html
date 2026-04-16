@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ListaPro CRM</title>
+  <link rel="stylesheet" href="/static/css/crm.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div id="crm-app">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside id="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">🏠</span>
+      <div>
+        <div class="brand-name">Lista<span>Pro</span></div>
+        <div class="brand-crm">CRM</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-view="dashboard">
+        <span>📊</span> Dashboard
+      </button>
+      <button class="nav-item" data-view="contacts">
+        <span>👥</span> Contactos
+      </button>
+      <button class="nav-item" data-view="properties">
+        <span>🏡</span> Propiedades
+      </button>
+      <button class="nav-item" data-view="pipeline">
+        <span>📋</span> Pipeline
+      </button>
+      <button class="nav-item" data-view="oportunidades">
+        <span>💡</span> Oportunidades
+      </button>
+      <button class="nav-item" data-view="activities">
+        <span>📝</span> Actividades
+      </button>
+      <button class="nav-item" data-view="campaigns">
+        <span>✉️</span> Campañas
+      </button>
+      <button class="nav-item" data-view="analytics">
+        <span>📈</span> Analíticas
+      </button>
+      <button class="nav-item" data-view="integrations">
+        <span>🔗</span> Integraciones
+      </button>
+    </nav>
+
+    <a href="/" class="sidebar-back">← Volver al generador</a>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <main id="crm-main">
+
+    <!-- ── DASHBOARD ── -->
+    <div id="view-dashboard" class="view active">
+      <div class="view-header">
+        <h2>Dashboard</h2>
+        <span id="dashboard-date" class="view-date"></span>
+      </div>
+
+      <div id="stats-grid" class="stats-grid"></div>
+
+      <div class="dashboard-panels">
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <h3>📅 Próximos Follow-ups</h3>
+          </div>
+          <div id="followups-list" class="followups-list"></div>
+        </div>
+        <div class="dash-panel">
+          <div class="dash-panel-header">
+            <h3>⚡ Actividad Reciente</h3>
+          </div>
+          <div id="recent-activities-list" class="activity-feed"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CONTACTS ── -->
+    <div id="view-contacts" class="view">
+      <div class="view-header">
+        <h2>Contactos</h2>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-secondary" onclick="triggerCsvImport()" title="Importar CSV">⬆ Importar CSV</button>
+          <button class="btn-primary" onclick="openContactModal()">+ Nuevo Contacto</button>
+        </div>
+      </div>
+      <div class="contact-filter-bar">
+        <input type="text" id="contact-search" placeholder="Buscar por nombre, teléfono, email…"
+               oninput="searchContacts(this.value)" class="search-input" style="flex:1;min-width:180px;" />
+        <select class="filter-select" onchange="applyContactFilter('tipo', this.value)">
+          <option value="">Todos los tipos</option>
+          <option value="prospecto">Prospecto</option>
+          <option value="comprador">Comprador</option>
+          <option value="vendedor">Vendedor</option>
+          <option value="ambos">Comprador y Vendedor</option>
+        </select>
+        <select class="filter-select" onchange="applyContactFilter('fuente', this.value)">
+          <option value="">Todas las fuentes</option>
+          <option value="manual">Manual</option>
+          <option value="instagram">Instagram</option>
+          <option value="facebook">Facebook</option>
+        </select>
+      </div>
+      <div class="contact-layout">
+        <div id="contacts-list" class="contacts-list"></div>
+        <div id="contact-detail" class="contact-detail" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- ── PROPERTIES ── -->
+    <div id="view-properties" class="view">
+      <div class="view-header">
+        <h2>Propiedades Guardadas</h2>
+      </div>
+      <div class="filter-row">
+        <input type="text" id="prop-search" placeholder="Buscar dirección, pueblo, tipo…"
+               oninput="filterProperties()" class="search-input" />
+        <div class="stage-filter-group">
+          <button class="stage-filter active" data-stage="">Todas</button>
+          <button class="stage-filter" data-stage="prospecto">Prospecto</button>
+          <button class="stage-filter" data-stage="activo">Activo</button>
+          <button class="stage-filter" data-stage="oferta">Oferta</button>
+          <button class="stage-filter" data-stage="contrato">Contrato</button>
+          <button class="stage-filter" data-stage="cerrado">Cerrado</button>
+        </div>
+      </div>
+      <div id="properties-grid" class="properties-grid"></div>
+    </div>
+
+    <!-- ── PIPELINE ── -->
+    <div id="view-pipeline" class="view">
+      <div class="view-header">
+        <h2>Pipeline de Ventas</h2>
+      </div>
+      <div id="kanban-board" class="kanban-board"></div>
+    </div>
+
+    <!-- ── OPORTUNIDADES ── -->
+    <div id="view-oportunidades" class="view">
+      <div class="view-header">
+        <h2>Oportunidades</h2>
+        <button class="btn-primary" onclick="openOpoModal()">+ Nueva Oportunidad</button>
+      </div>
+      <div id="opo-pipeline-summary" class="opo-pipeline-summary"></div>
+      <div id="opo-kanban" class="opo-kanban"></div>
+    </div>
+
+    <!-- ── ACTIVITIES ── -->
+    <div id="view-activities" class="view">
+      <div class="view-header">
+        <h2>Actividades</h2>
+        <button class="btn-primary" onclick="openActivityModal()">+ Nueva Actividad</button>
+      </div>
+      <div id="activities-feed" class="activity-feed activity-feed-full"></div>
+    </div>
+
+    <!-- ── CAMPAÑAS ── -->
+    <div id="view-campaigns" class="view">
+      <div class="view-header">
+        <h2>Campañas de Email</h2>
+        <button class="btn-primary" onclick="openCampaignModal()">+ Nueva Campaña</button>
+      </div>
+      <div id="campaigns-list" class="campaigns-list"></div>
+    </div>
+
+    <!-- ── ANALÍTICAS ── -->
+    <div id="view-analytics" class="view">
+      <div class="view-header">
+        <h2>Analíticas</h2>
+        <button class="btn-secondary" onclick="loadAnalytics()">↻ Actualizar</button>
+      </div>
+      <div id="analytics-kpis" class="stats-grid" style="margin-bottom:28px;"></div>
+      <div class="analytics-charts-grid">
+        <div class="chart-card">
+          <div class="chart-card-title">Pipeline Mensual</div>
+          <canvas id="chart-pipeline" height="220"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Ingresos Cerrados por Mes</div>
+          <canvas id="chart-revenue" height="220"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Fuentes de Contactos</div>
+          <canvas id="chart-sources" height="220"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-card-title">Pipeline Oportunidades ($)</div>
+          <canvas id="chart-oportunidades" height="220"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── INTEGRACIONES ── -->
+    <div id="view-integrations" class="view">
+      <div class="view-header">
+        <h2>Integraciones</h2>
+      </div>
+      <div id="integrations-content" class="integrations-grid"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══ TOAST CONTAINER ═══ -->
+<div id="toast-container"></div>
+
+<!-- ═══ CONTACT MODAL ═══ -->
+<div id="contact-modal" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="contact-modal-title">Nuevo Contacto</h3>
+      <button class="modal-close" onclick="closeModal('contact-modal')">✕</button>
+    </div>
+    <form id="contact-form" onsubmit="submitContactForm(event)">
+      <div class="form-field">
+        <label>Nombre *</label>
+        <input type="text" id="cf-nombre" required />
+      </div>
+      <div class="form-grid-2">
+        <div class="form-field">
+          <label>Teléfono</label>
+          <input type="tel" id="cf-telefono" />
+        </div>
+        <div class="form-field">
+          <label>Email</label>
+          <input type="email" id="cf-email" />
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-field">
+          <label>Tipo</label>
+          <select id="cf-tipo">
+            <option value="prospecto">Prospecto</option>
+            <option value="comprador">Comprador</option>
+            <option value="vendedor">Vendedor</option>
+            <option value="ambos">Comprador y Vendedor</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Próximo Follow-up</label>
+          <input type="date" id="cf-followup" />
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Notas</label>
+        <textarea id="cf-notas" rows="3"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" onclick="closeModal('contact-modal')">Cancelar</button>
+        <button type="submit" class="btn-primary">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ═══ ACTIVITY MODAL ═══ -->
+<div id="activity-modal" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Nueva Actividad</h3>
+      <button class="modal-close" onclick="closeModal('activity-modal')">✕</button>
+    </div>
+    <form id="activity-form" onsubmit="submitActivityForm(event)">
+      <div class="form-grid-2">
+        <div class="form-field">
+          <label>Tipo</label>
+          <select id="af-tipo">
+            <option value="nota">📝 Nota</option>
+            <option value="llamada">📞 Llamada</option>
+            <option value="visita">🏠 Visita</option>
+            <option value="correo">✉️ Correo</option>
+            <option value="reunion">🤝 Reunión</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Fecha</label>
+          <input type="date" id="af-fecha" />
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Descripción *</label>
+        <textarea id="af-descripcion" rows="3" required></textarea>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-field">
+          <label>Contacto</label>
+          <select id="af-contact-id">
+            <option value="">Sin contacto</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Propiedad</label>
+          <select id="af-property-id">
+            <option value="">Sin propiedad</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" onclick="closeModal('activity-modal')">Cancelar</button>
+        <button type="submit" class="btn-primary">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ═══ PROPERTY DETAIL MODAL ═══ -->
+<div id="property-modal" class="modal-overlay" style="display:none;">
+  <div class="modal-box modal-wide">
+    <div class="modal-header">
+      <h3 id="pm-title">Detalle de Propiedad</h3>
+      <button class="modal-close" onclick="closeModal('property-modal')">✕</button>
+    </div>
+    <div id="property-modal-body"></div>
+  </div>
+</div>
+
+<!-- ═══ OPORTUNIDAD MODAL ═══ -->
+<div id="opo-modal" class="modal-overlay" style="display:none;">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="opo-modal-title">Nueva Oportunidad</h3>
+      <button class="modal-close" onclick="closeModal('opo-modal')">✕</button>
+    </div>
+    <form id="opo-form" onsubmit="submitOpoForm(event)">
+      <div class="form-field">
+        <label>Nombre *</label>
+        <input type="text" id="of-nombre" required placeholder="Ej: Venta casa Bayamón - Familia Rivera" />
+      </div>
+      <div class="form-grid-2">
+        <div class="form-field">
+          <label>Valor ($)</label>
+          <input type="number" id="of-valor" min="0" step="1000" value="0" />
+        </div>
+        <div class="form-field">
+          <label>Probabilidad (%)</label>
+          <input type="number" id="of-probabilidad" min="0" max="100" value="20" />
+        </div>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-field">
+          <label>Etapa</label>
+          <select id="of-etapa">
+            <option value="prospecto">Prospecto</option>
+            <option value="contacto">Contacto</option>
+            <option value="propuesta">Propuesta</option>
+            <option value="negociacion">Negociación</option>
+            <option value="cerrado_ganado">Cerrado Ganado</option>
+            <option value="cerrado_perdido">Cerrado Perdido</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Cierre Esperado</label>
+          <input type="date" id="of-cierre" />
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Contacto</label>
+        <select id="of-contacto-id">
+          <option value="">Sin contacto</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Notas</label>
+        <textarea id="of-notas" rows="3"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" onclick="closeModal('opo-modal')">Cancelar</button>
+        <button type="submit" class="btn-primary">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ═══ CAMPAIGN MODAL ═══ -->
+<div id="campaign-modal" class="modal-overlay" style="display:none;">
+  <div class="modal-box modal-wide">
+    <div class="modal-header">
+      <h3 id="campaign-modal-title">Nueva Campaña de Email</h3>
+      <button class="modal-close" onclick="closeModal('campaign-modal')">✕</button>
+    </div>
+    <form id="campaign-form" onsubmit="submitCampaignForm(event)">
+      <div class="form-grid-2">
+        <div class="form-field">
+          <label>Nombre de la campaña *</label>
+          <input type="text" id="cam-nombre" required />
+        </div>
+        <div class="form-field">
+          <label>Segmento</label>
+          <select id="cam-segmento">
+            <option value="todos">Todos los contactos</option>
+            <option value="comprador">Solo compradores</option>
+            <option value="vendedor">Solo vendedores</option>
+            <option value="prospecto">Solo prospectos</option>
+            <option value="ambos">Compradores y vendedores</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Asunto del email *</label>
+        <input type="text" id="cam-asunto" required />
+      </div>
+      <div class="form-field">
+        <label>Plantilla rápida</label>
+        <div id="template-buttons" class="template-buttons"></div>
+      </div>
+      <div class="form-field">
+        <label>Contenido HTML del email *</label>
+        <textarea id="cam-html-body" rows="10" required
+          placeholder="Pega el HTML del email o usa una plantilla de arriba…"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" onclick="closeModal('campaign-modal')">Cancelar</button>
+        <button type="submit" class="btn-primary">Guardar Borrador</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ═══ CAMPAIGN DETAIL MODAL ═══ -->
+<div id="campaign-detail-modal" class="modal-overlay" style="display:none;">
+  <div class="modal-box modal-wide">
+    <div class="modal-header">
+      <h3 id="cdm-title">Detalle de Campaña</h3>
+      <button class="modal-close" onclick="closeModal('campaign-detail-modal')">✕</button>
+    </div>
+    <div id="campaign-detail-body"></div>
+  </div>
+</div>
+
+<!-- ═══ TAG PICKER MODAL ═══ -->
+<div id="tag-picker-modal" class="modal-overlay" style="display:none;">
+  <div class="modal-box" style="max-width:420px;">
+    <div class="modal-header">
+      <h3>Gestionar Tags</h3>
+      <button class="modal-close" onclick="closeModal('tag-picker-modal')">✕</button>
+    </div>
+    <div id="tag-picker-content"></div>
+  </div>
+</div>
+
+<!-- ═══ TASK MODAL ═══ -->
+<div id="task-modal" class="modal-overlay" style="display:none;">
+  <div class="modal-box" style="max-width:420px;">
+    <div class="modal-header">
+      <h3>Nueva Tarea</h3>
+      <button class="modal-close" onclick="closeModal('task-modal')">✕</button>
+    </div>
+    <form id="task-form" onsubmit="submitTaskForm(event)">
+      <div class="form-field">
+        <label>Título *</label>
+        <input type="text" id="tf-titulo" required placeholder="Ej: Enviar propuesta, Llamar cliente…" />
+      </div>
+      <div class="form-field">
+        <label>Fecha de vencimiento</label>
+        <input type="date" id="tf-fecha" />
+      </div>
+      <div class="form-field">
+        <label>Descripción</label>
+        <textarea id="tf-descripcion" rows="2"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" onclick="closeModal('task-modal')">Cancelar</button>
+        <button type="submit" class="btn-primary">Crear Tarea</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/static/js/crm.js"></script>
+</body>
+</html>

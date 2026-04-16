@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ListaPro — Herramienta para Agentes Inmobiliarios</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+<header>
+  <div class="logo-row">
+    <span class="logo-icon">🏠</span>
+    <h1>Lista<span>Pro</span></h1>
+  </div>
+  <p>Genera descripciones profesionales e Instagram copy para tus propiedades en segundos</p>
+</header>
+
+<div id="app">
+
+  <!-- ═══════════════════════════════════════════ FORM ═══ -->
+  <section id="form-section">
+    <form id="property-form" enctype="multipart/form-data" novalidate>
+
+      <!-- Bloque 1: Información de la Propiedad -->
+      <fieldset>
+        <legend>Información de la Propiedad</legend>
+
+        <div style="margin-top:16px;">
+          <label for="tipo_propiedad">Tipo de Propiedad *</label>
+          <select id="tipo_propiedad" name="tipo_propiedad" required>
+            <option value="" disabled selected>Selecciona el tipo</option>
+            <option value="Casa">Casa</option>
+            <option value="Apartamento">Apartamento</option>
+            <option value="Solar">Solar / Terreno</option>
+            <option value="Penthouse">Penthouse</option>
+            <option value="Propiedad Comercial">Propiedad Comercial</option>
+          </select>
+        </div>
+
+        <div style="margin-top:16px;">
+          <label>Operación *</label>
+          <div class="toggle-group">
+            <input type="radio" id="op-venta" name="operacion" value="Venta" required checked />
+            <label for="op-venta">🏷️ Venta</label>
+            <input type="radio" id="op-alquiler" name="operacion" value="Alquiler" />
+            <label for="op-alquiler">🔑 Alquiler</label>
+          </div>
+        </div>
+
+        <div class="form-grid" style="margin-top:16px;">
+          <div class="full-width">
+            <label for="direccion">Dirección / Ubicación *</label>
+            <input type="text" id="direccion" name="direccion" placeholder="Ej: Calle Rosa #12, Urb. Jardines del Caribe" required />
+          </div>
+          <div>
+            <label for="pueblo">Pueblo / Municipio *</label>
+            <select id="pueblo" name="pueblo" required>
+              <option value="" disabled selected>Selecciona el pueblo</option>
+            </select>
+          </div>
+          <div>
+            <label for="precio">Precio (USD) *</label>
+            <div class="input-prefix">
+              <span>$</span>
+              <input type="number" id="precio" name="precio" placeholder="350,000" min="0" step="1000" required />
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Bloque 2: Detalles de la Propiedad -->
+      <fieldset>
+        <legend>Detalles de la Propiedad</legend>
+        <div class="form-grid cols-3" style="margin-top:16px;">
+          <div>
+            <label for="habitaciones">Habitaciones</label>
+            <input type="number" id="habitaciones" name="habitaciones" placeholder="3" min="0" max="50" />
+          </div>
+          <div>
+            <label for="banos">Baños</label>
+            <input type="number" id="banos" name="banos" placeholder="2" min="0" max="20" step="0.5" />
+          </div>
+          <div>
+            <label for="estacionamientos">Estacionamientos</label>
+            <input type="number" id="estacionamientos" name="estacionamientos" placeholder="1" min="0" max="20" />
+          </div>
+          <div>
+            <label for="pies_cuadrados_construccion">Pies² Construcción</label>
+            <input type="number" id="pies_cuadrados_construccion" name="pies_cuadrados_construccion" placeholder="1,200" min="0" />
+          </div>
+          <div class="full-width">
+            <label for="metros_o_cuerdas_terreno">Terreno (metros o cuerdas)</label>
+            <input type="text" id="metros_o_cuerdas_terreno" name="metros_o_cuerdas_terreno" placeholder="Ej: 450 metros cuadrados  ó  1.5 cuerdas" />
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Bloque 3: Amenidades -->
+      <fieldset>
+        <legend>Amenidades</legend>
+        <div class="amenidades-grid">
+          <label class="amenidad-item">
+            <input type="checkbox" name="amenidades" value="Piscina" />
+            <span>🏊 Piscina</span>
+          </label>
+          <label class="amenidad-item">
+            <input type="checkbox" name="amenidades" value="Patio" />
+            <span>🌿 Patio</span>
+          </label>
+          <label class="amenidad-item">
+            <input type="checkbox" name="amenidades" value="Control de acceso / Seguridad 24/7" />
+            <span>🔒 Control de acceso / Seguridad 24/7</span>
+          </label>
+          <label class="amenidad-item">
+            <input type="checkbox" name="amenidades" value="Gimnasio" />
+            <span>🏋️ Gimnasio</span>
+          </label>
+          <label class="amenidad-item">
+            <input type="checkbox" name="amenidades" value="Cisterna" />
+            <span>💧 Cisterna</span>
+          </label>
+          <label class="amenidad-item">
+            <input type="checkbox" name="amenidades" value="Generador eléctrico / Planta" />
+            <span>⚡ Generador eléctrico / Planta</span>
+          </label>
+          <label class="amenidad-item">
+            <input type="checkbox" name="amenidades" value="Balcón" />
+            <span>🏙️ Balcón</span>
+          </label>
+          <label class="amenidad-item">
+            <input type="checkbox" name="amenidades" value="Cuarto de lavado" />
+            <span>🧺 Cuarto de lavado</span>
+          </label>
+          <label class="amenidad-item">
+            <input type="checkbox" name="amenidades" value="Terraza" />
+            <span>☀️ Terraza</span>
+          </label>
+          <label class="amenidad-item">
+            <input type="checkbox" name="amenidades" value="Vista al mar" />
+            <span>🌊 Vista al mar</span>
+          </label>
+          <label class="amenidad-item">
+            <input type="checkbox" name="amenidades" value="Área de juegos" />
+            <span>🎠 Área de juegos</span>
+          </label>
+          <label class="amenidad-item">
+            <input type="checkbox" name="amenidades" value="Cancha de tenis" />
+            <span>🎾 Cancha de tenis</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Bloque 4: Fotos -->
+      <fieldset>
+        <legend>Fotos de la Propiedad</legend>
+        <div style="margin-top:6px;">
+          <label>Foto de Portada * <small style="color:var(--text-muted);font-weight:400;">(imagen principal)</small></label>
+          <label class="file-upload-area" for="foto_portada">
+            <div class="upload-icon">📷</div>
+            <p><strong>Haz clic para seleccionar</strong> la foto principal</p>
+            <p>JPG, PNG o WEBP · Máx. 10MB</p>
+            <input type="file" id="foto_portada" name="foto_portada" accept="image/*" required />
+          </label>
+          <div id="portada-preview" class="photo-preview-grid"></div>
+        </div>
+
+        <div style="margin-top:20px;">
+          <label>Fotos Adicionales <small style="color:var(--text-muted);font-weight:400;">(opcional)</small></label>
+          <label class="file-upload-area" for="fotos_extras">
+            <div class="upload-icon">🖼️</div>
+            <p><strong>Haz clic para seleccionar</strong> fotos adicionales</p>
+            <p>Puedes seleccionar varias a la vez</p>
+            <input type="file" id="fotos_extras" name="fotos_extras" accept="image/*" multiple />
+          </label>
+          <div id="extras-preview" class="photo-preview-grid"></div>
+        </div>
+      </fieldset>
+
+      <!-- Bloque 5: Descripción del Agente -->
+      <fieldset>
+        <legend>Tu Descripción de la Propiedad</legend>
+        <div style="margin-top:12px;">
+          <label for="descripcion_agente">¿Qué destacas de esta propiedad? *</label>
+          <textarea
+            id="descripcion_agente"
+            name="descripcion_agente"
+            rows="3"
+            placeholder="Ej: Hermosa casa remodelada en urbanización exclusiva, lista para mudarse. Cocina moderna con granito, pisos de porcelana en toda la casa y amplio patio con área de BBQ."
+            required
+          ></textarea>
+        </div>
+      </fieldset>
+
+      <!-- Bloque 6: Datos del Agente -->
+      <fieldset>
+        <legend>Datos del Agente</legend>
+        <div class="form-grid" style="margin-top:16px;">
+          <div>
+            <label for="nombre_agente">Nombre del Agente *</label>
+            <input type="text" id="nombre_agente" name="nombre_agente" placeholder="María González" required />
+          </div>
+          <div>
+            <label for="licencia_agente">Número de Licencia *</label>
+            <input type="text" id="licencia_agente" name="licencia_agente" placeholder="Lic. V-4346" required />
+          </div>
+          <div>
+            <label for="telefono_agente">Teléfono *</label>
+            <input type="tel" id="telefono_agente" name="telefono_agente" placeholder="787-555-0000" required />
+          </div>
+          <div>
+            <label for="email_agente">Email</label>
+            <input type="email" id="email_agente" name="email_agente" placeholder="agente@correo.com" />
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- Bloque 7: Datos de la Agencia -->
+      <fieldset>
+        <legend>Datos de la Agencia</legend>
+        <div class="form-grid" style="margin-top:16px;">
+          <div>
+            <label for="nombre_agencia">Nombre de la Agencia</label>
+            <input type="text" id="nombre_agencia" name="nombre_agencia" placeholder="Mendez Group" />
+          </div>
+          <div>
+            <label for="tagline_agencia">Tagline / Slogan</label>
+            <input type="text" id="tagline_agencia" name="tagline_agencia" placeholder="Bienes Raíces · Puerto Rico" />
+          </div>
+          <div>
+            <label for="color_primario">Color Primario</label>
+            <div class="color-picker-wrap">
+              <input type="color" id="color_primario" name="color_primario" value="#1a6b8a" />
+              <span id="color-primario-hex">#1a6b8a</span>
+            </div>
+          </div>
+          <div>
+            <label for="color_acento">Color Acento</label>
+            <div class="color-picker-wrap">
+              <input type="color" id="color_acento" name="color_acento" value="#f4a623" />
+              <span id="color-acento-hex">#f4a623</span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:16px;">
+          <label>Logo de la Agencia <small style="color:var(--text-muted);font-weight:400;">(reemplaza logo predeterminado · PNG transparente recomendado)</small></label>
+          <label class="file-upload-area" for="logo_agencia">
+            <div class="upload-icon">🏢</div>
+            <p><strong>Clic para subir</strong> el logo de la agencia</p>
+            <p>PNG con fondo transparente recomendado · Máx 5MB</p>
+            <input type="file" id="logo_agencia" name="logo_agencia" accept="image/*" />
+          </label>
+          <div id="logo-agencia-preview" class="photo-preview-grid"></div>
+        </div>
+      </fieldset>
+
+      <div id="form-error" class="error-msg">⚠️ <span id="error-text"></span></div>
+
+      <button type="submit" id="submit-btn">
+        <span id="btn-icon">✨</span>
+        <span id="btn-text">Generar Descripción con IA</span>
+      </button>
+    </form>
+  </section>
+
+  <!-- ══════════════════════════════════════════ RESULTS ═══ -->
+  <section id="results-section">
+    <div class="results-header">
+      <h2>✅ Contenido Generado con IA</h2>
+      <p>Listo para publicar. Copia el texto y úsalo en tus plataformas.</p>
+    </div>
+
+    <img id="result-cover-photo" src="" alt="Foto de portada" />
+
+    <div class="result-card">
+      <div class="result-card-header">
+        <h3>🏡 Descripción Profesional</h3>
+        <button class="copy-btn" data-target="listing-description-text">Copiar</button>
+      </div>
+      <div id="listing-description-text" class="result-text"></div>
+    </div>
+
+    <div class="result-card instagram">
+      <div class="result-card-header">
+        <h3>📱 Copy para Instagram</h3>
+        <div style="display:flex;gap:8px;">
+          <button class="copy-btn" data-target="instagram-copy-text">Copiar</button>
+          <button id="publish-ig-btn" class="publish-btn" style="display:none;">📤 Publicar en IG</button>
+        </div>
+      </div>
+      <div id="instagram-copy-text" class="result-text"></div>
+      <div id="publish-status" class="publish-status" style="display:none;"></div>
+    </div>
+
+    <!-- Instagram Carousel -->
+    <div id="carousel-section" class="result-card carousel-card" style="display:none;">
+      <div class="result-card-header">
+        <h3>🖼️ Carrusel de Instagram</h3>
+        <span id="carousel-slide-count" class="carousel-count-badge"></span>
+      </div>
+      <div class="carousel-viewer">
+        <button class="carousel-nav" onclick="carouselNav(-1)">&#8249;</button>
+        <div class="carousel-main">
+          <img id="carousel-img" src="" alt="Slide" />
+          <div class="carousel-counter">
+            <span id="carousel-current">1</span> / <span id="carousel-total">1</span>
+          </div>
+        </div>
+        <button class="carousel-nav" onclick="carouselNav(1)">&#8250;</button>
+      </div>
+      <div id="carousel-thumbs" class="carousel-thumbs"></div>
+      <div class="carousel-actions">
+        <a id="carousel-dl-current" href="#" download class="carousel-dl-btn">⬇ Descargar este slide</a>
+        <button onclick="carouselDownloadAll()" class="carousel-dl-all-btn">⬇ Descargar todos</button>
+      </div>
+    </div>
+
+    <!-- Selector de estilo para el video -->
+    <div id="tema-selector" style="display:none;">
+      <div class="tema-selector-card">
+        <p class="tema-label">Estilo del Video</p>
+        <div class="tema-pills">
+          <button class="tema-pill active" data-tema="0">✨ Auto</button>
+          <button class="tema-pill" data-tema="1" style="--tc:#1a6b8a;--ta:#f4a623">Teal &amp; Gold</button>
+          <button class="tema-pill" data-tema="2" style="--tc:#1a2a6c;--ta:#c5cbe9">Navy &amp; Platinum</button>
+          <button class="tema-pill" data-tema="3" style="--tc:#1b5e20;--ta:#ffd600">Emerald &amp; Gold</button>
+          <button class="tema-pill" data-tema="4" style="--tc:#37474f;--ta:#ff7043">Charcoal &amp; Coral</button>
+          <button class="tema-pill" data-tema="5" style="--tc:#880e4f;--ta:#e8d5b7">Burgundy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video generation section -->
+    <div id="video-section" style="display:none;">
+      <div class="result-card video-card">
+        <div class="result-card-header">
+          <h3>🎬 Video Reel</h3>
+          <span id="video-status-label" class="video-status-badge">Preparando…</span>
+        </div>
+        <div class="video-progress-wrap">
+          <div class="video-progress-bar">
+            <div id="video-progress-fill" class="video-progress-fill" style="width:0%"></div>
+          </div>
+          <span id="video-progress-pct">0%</span>
+        </div>
+        <p id="video-status-msg" class="video-status-msg">Iniciando renderizado…</p>
+        <a id="download-video-btn" href="#" download class="download-btn video-dl-btn" style="display:none;">
+          🎬 Descargar Video Reel
+        </a>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <a id="download-pdf-btn" href="#" download class="download-btn pdf-btn" style="display:none;">
+        📄 Descargar PDF
+      </a>
+      <a id="download-ig-btn" href="#" download class="download-btn ig-btn" style="display:none;">
+        📸 Descargar Imagen IG
+      </a>
+      <button id="generate-video-btn" class="download-btn video-btn" style="display:none;">
+        🎬 Generar Video Reel
+      </button>
+      <button id="save-crm-btn" class="download-btn crm-btn" style="display:none;">
+        🗂 Guardar en CRM
+      </button>
+      <button id="new-listing-btn">+ Generar Otra Propiedad</button>
+    </div>
+
+    <div style="text-align:center;margin-top:14px;">
+      <a href="/crm" class="crm-nav-link">Ir al CRM →</a>
+    </div>
+  </section>
+
+  <!-- ══════════════════════ CRM SAVE MODAL ═════ -->
+  <div id="crm-save-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:300;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:#fff;border-radius:14px;padding:28px;width:100%;max-width:460px;box-shadow:0 8px 40px rgba(0,0,0,0.22);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h3 style="font-size:17px;font-weight:800;color:#135470;">🗂 Guardar en CRM</h3>
+        <button onclick="document.getElementById('crm-save-modal').style.display='none'" style="background:none;border:none;font-size:20px;cursor:pointer;color:#6b7f8a;">✕</button>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label style="display:block;font-size:12px;font-weight:700;color:#6b7f8a;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;">Contacto</label>
+        <select id="crm-contact-select" style="width:100%;padding:9px 12px;border:1.5px solid #dce3e8;border-radius:7px;font-size:14px;">
+          <option value="">Sin contacto (guardar sin asignar)</option>
+        </select>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label style="display:block;font-size:12px;font-weight:700;color:#6b7f8a;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;">Estado del Pipeline</label>
+        <select id="crm-stage-select" style="width:100%;padding:9px 12px;border:1.5px solid #dce3e8;border-radius:7px;font-size:14px;">
+          <option value="prospecto">Prospecto</option>
+          <option value="activo">Activo</option>
+          <option value="oferta">Oferta</option>
+          <option value="contrato">Contrato</option>
+          <option value="cerrado">Cerrado</option>
+        </select>
+      </div>
+      <div style="margin-bottom:20px;">
+        <label style="display:block;font-size:12px;font-weight:700;color:#6b7f8a;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:6px;">Notas</label>
+        <textarea id="crm-notes" rows="2" style="width:100%;padding:9px 12px;border:1.5px solid #dce3e8;border-radius:7px;font-size:14px;font-family:inherit;resize:vertical;"></textarea>
+      </div>
+      <div id="crm-save-status" style="display:none;margin-bottom:14px;padding:10px 14px;border-radius:7px;font-size:13px;font-weight:600;"></div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button onclick="document.getElementById('crm-save-modal').style.display='none'" style="padding:9px 18px;background:#f0f4f7;border:1.5px solid #dce3e8;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
+        <button onclick="saveToCRM()" style="padding:9px 18px;background:#1a6b8a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">Guardar</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#app -->
+
+<!-- Loading Overlay -->
+<div id="loading-overlay" style="display:none;">
+  <div class="spinner"></div>
+  <p>Generando con IA… por favor espera</p>
+</div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>

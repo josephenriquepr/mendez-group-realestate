@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ListaPro (FastAPI)",
+      "runtimeExecutable": "/Volumes/memoria 1/Claude/inmobiliria kelitz/.venv/bin/python3",
+      "runtimeArgs": ["main.py"],
+      "port": 8003
+    }
+  ]
+}
