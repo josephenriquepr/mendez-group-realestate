@@ -11,3 +11,6 @@ uploads/*
 !uploads/.gitkeep
 .DS_Store
 *.swp
+
+video/node_modules/
+.claude/
