@@ -1,5 +1,5 @@
 [phases.setup]
 nixPkgs = ["python312", "ffmpeg", "gcc"]
 
-[phases.install]
-cmds = ["pip3 install -r requirements.txt"]
+# No custom install phase — Nixpacks auto-detects requirements.txt
+# and installs packages using the correct pip path inside /opt/venv.
