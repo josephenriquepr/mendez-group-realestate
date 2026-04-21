@@ -157,6 +157,9 @@ async def kelitza_page():
 
 # Static files mount (DESPUÉS de las rutas específicas)
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+# /css y /js — compatibilidad con Netlify (HTML usa /css/ en lugar de /static/css/)
+app.mount("/css", StaticFiles(directory="static/css"), name="css")
+app.mount("/js",  StaticFiles(directory="static/js"),  name="js")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 

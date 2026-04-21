@@ -1,0 +1,52 @@
+[build]
+  # Netlify sirve los archivos estáticos desde static/
+  publish = "static"
+  # No hay build step — es HTML/CSS/JS puro
+  command = ""
+
+# ── Rutas de páginas ──────────────────────────────────────────────────────────
+
+[[redirects]]
+  from = "/"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/crm"
+  to = "/crm.html"
+  status = 200
+
+# ── Proxy al backend (Railway) ────────────────────────────────────────────────
+# Reemplaza RAILWAY_URL con tu URL de Railway después de desplegar el backend.
+# Ejemplo: https://listapro-production.up.railway.app
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://RAILWAY_URL/api/:splat"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/uploads/*"
+  to = "https://RAILWAY_URL/uploads/:splat"
+  status = 200
+  force = true
+
+# ── Headers de seguridad ──────────────────────────────────────────────────────
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
