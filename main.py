@@ -43,16 +43,21 @@ os.makedirs("static", exist_ok=True)
 @app.on_event("startup")
 async def startup_event():
     """Inicializar BD y verificar conexiones"""
+    import asyncio
     print("🚀 Iniciando ListaPro SaaS...")
 
-    # Verificar conexión a PostgreSQL
+    # Run DB init in a thread so it never blocks uvicorn's event loop
+    loop = asyncio.get_event_loop()
+    await loop.run_in_executor(None, _init_db_safe)
+
+
+def _init_db_safe():
+    """Init DB in a background thread — won't block health checks."""
     if check_db_connection():
         print("✅ Conexión a PostgreSQL: OK")
     else:
         print("⚠️  ADVERTENCIA: No se puede conectar a PostgreSQL")
-        print("   Asegúrate de que Docker está corriendo: docker-compose up -d")
 
-    # Crear tablas
     try:
         init_db()
         print("✅ Base de datos inicializada")
@@ -87,12 +92,8 @@ app.add_middleware(
 
 @app.get("/health", tags=["health"])
 async def health_check():
-    """Health check endpoint"""
-    return {
-        "status": "healthy",
-        "version": "2.0.0",
-        "database": "connected" if check_db_connection() else "disconnected"
-    }
+    """Health check endpoint — lightweight, no DB round-trip"""
+    return {"status": "healthy", "version": "2.0.0"}
 
 
 # ============= NUEVOS ROUTERS (MULTI-TENANT) =============
