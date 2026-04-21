@@ -1,10 +1,9 @@
 """
 Modelo Tenant - Representa cada cliente/agencia en la plataforma
 """
-from sqlalchemy import Column, String, DateTime, Integer, func, Index
+from sqlalchemy import Column, String, DateTime, Integer, func, Index, UUID
 from sqlalchemy.orm import relationship
 from models.base import Base, UUIDMixin, TimestampMixin
-from uuid import UUID
 from datetime import datetime
 
 class Tenant(Base, UUIDMixin, TimestampMixin):
@@ -29,13 +28,9 @@ class Tenant(Base, UUIDMixin, TimestampMixin):
     owner_email = Column(String(255), nullable=True)
     owner_phone = Column(String(20), nullable=True)
 
-    # Relationships
+    # Relationships (solo modelos multi-tenant activos)
     users = relationship("User", back_populates="tenant", cascade="all, delete-orphan")
     properties = relationship("Property", back_populates="tenant", cascade="all, delete-orphan")
-    contacts = relationship("Contact", back_populates="tenant", cascade="all, delete-orphan")
-    campaigns = relationship("Campaign", back_populates="tenant", cascade="all, delete-orphan")
-    tasks = relationship("Task", back_populates="tenant", cascade="all, delete-orphan")
-    usage_logs = relationship("UsageLog", back_populates="tenant", cascade="all, delete-orphan")
 
     # Índices para queries rápidas
     __table_args__ = (

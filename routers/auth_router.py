@@ -23,7 +23,7 @@ router = APIRouter(prefix="/api/auth", tags=["auth"])
 class RegisterRequest(BaseModel):
     """Schema para registrar un nuevo usuario/tenant"""
     company_name: str = Field(..., min_length=2, max_length=255)
-    company_slug: str = Field(..., min_length=3, max_length=100, regex="^[a-z0-9-]+$")
+    company_slug: str = Field(..., min_length=3, max_length=100, pattern="^[a-z0-9-]+$")
     email: EmailStr
     password: str = Field(..., min_length=8)
     full_name: str = Field(..., min_length=2, max_length=255)

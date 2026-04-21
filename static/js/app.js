@@ -252,6 +252,49 @@ document.querySelectorAll(".tema-pill").forEach(pill => {
   });
 });
 
+/* ─── Renderer selection ──────────────────────────────────────── */
+window._lastRenderer   = "ffmpeg";
+window._lastTransition = "fade";
+
+document.querySelectorAll('input[name="renderer"]').forEach(radio => {
+  radio.addEventListener("change", () => {
+    window._lastRenderer = radio.value;
+    document.getElementById("opt-ffmpeg").classList.toggle("active", radio.value === "ffmpeg");
+    document.getElementById("opt-remotion").classList.toggle("active", radio.value === "remotion");
+    document.getElementById("ffmpeg-opts").style.display = radio.value === "ffmpeg" ? "block" : "none";
+  });
+});
+document.querySelectorAll(".renderer-opt").forEach(label => {
+  label.addEventListener("click", () => {
+    const radio = label.querySelector("input");
+    radio.checked = true;
+    radio.dispatchEvent(new Event("change"));
+  });
+});
+
+/* ─── Transition pill selection ───────────────────────────────── */
+document.querySelectorAll(".trans-pill").forEach(pill => {
+  pill.addEventListener("click", () => {
+    document.querySelectorAll(".trans-pill").forEach(p => p.classList.remove("active"));
+    pill.classList.add("active");
+    window._lastTransition = pill.dataset.trans || "fade";
+  });
+});
+
+/* ─── Music file upload ───────────────────────────────────────── */
+window._lastMusicDataUrl = null;
+document.getElementById("music-upload")?.addEventListener("change", function () {
+  const file = this.files[0];
+  if (!file) return;
+  const label = document.querySelector(".music-upload-label");
+  document.getElementById("music-upload-text").textContent = "🎵 " + file.name;
+  label.classList.add("has-file");
+  document.getElementById("music-file-name").textContent = `(${(file.size / 1024 / 1024).toFixed(1)} MB)`;
+  // Store as data URL — will be sent to server separately if needed
+  // For now we just track the file name; ffmpeg_service will look for default tracks
+  window._lastMusicFile = file;
+});
+
 /* ─── Publish to Instagram ────────────────────────────────────── */
 document.getElementById("publish-ig-btn").addEventListener("click", async function () {
   const btn = this;
@@ -288,7 +331,7 @@ const VIDEO_STATUS_LABELS = {
   installing:  "Instalando dependencias",
   bundling:    "Compilando proyecto",
   composing:   "Configurando composición",
-  rendering:   "Renderizando frames",
+  rendering:   "Renderizando",
   finalizing:  "Finalizando",
   done:        "¡Listo!",
   error:       "Error",
@@ -323,6 +366,8 @@ document.getElementById("generate-video-btn").addEventListener("click", async fu
       body: JSON.stringify({
         portada_url: window._lastPortadaUrl,
         extras_urls: window._lastExtrasUrls,
+        renderer:    window._lastRenderer   || "ffmpeg",
+        transition:  window._lastTransition || "fade",
         data: {
           ...window._lastPropertyData,
           logo_agencia_local: window._lastAgenciaLogoUrl

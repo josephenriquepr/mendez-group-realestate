@@ -5,7 +5,9 @@ from models.base import Base, UUIDMixin, TimestampMixin, TenantMixin
 from models.tenant import Tenant
 from models.user import User
 from models.property_models import Property, PropertyPhoto
-from models.crm_models import Contact, Campaign, Task, UsageLog
+
+# crm_models NO se importa aquí para evitar conflicto de tabla con models/crm.py (legacy).
+# Cuando se migre a multi-tenant, se unificará en un solo modelo.
 
 __all__ = [
     "Base",
@@ -16,8 +18,4 @@ __all__ = [
     "User",
     "Property",
     "PropertyPhoto",
-    "Contact",
-    "Campaign",
-    "Task",
-    "UsageLog",
 ]

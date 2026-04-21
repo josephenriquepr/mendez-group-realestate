@@ -1,39 +1,46 @@
 """
-Database setup para PostgreSQL con SQLAlchemy
-Arquitectura multi-tenant
+Database setup — PostgreSQL en producción, SQLite en desarrollo sin Docker.
 """
-from sqlalchemy import create_engine, event, pool
+from sqlalchemy import create_engine, text, pool
 from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.pool import NullPool
 import os
 from typing import Generator
 
 from models.base import Base
 
-# Configuración de BD desde variables de entorno o defaults
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://listapro_user:listapro_secure_dev_password@localhost:5432/listapro_db"
-)
+# ──────────────────────────────────────────────
+# Detectar si se usa PostgreSQL o SQLite
+# ──────────────────────────────────────────────
+DATABASE_URL = os.getenv("DATABASE_URL", "")
 
 # Railway usa "postgres://" — SQLAlchemy requiere "postgresql://"
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
-# Ambiente
+# Si no hay DATABASE_URL, usar SQLite local (desarrollo)
+if not DATABASE_URL:
+    DATABASE_URL = "sqlite:///./listapro_dev.db"
+    print("ℹ️  Sin DATABASE_URL → usando SQLite (listapro_dev.db)")
+
 ENV = os.getenv("ENV", "development")
 
-# Crear engine con configuración según ambiente
-if ENV == "production":
-    # En producción: NullPool para evitar conexiones abiertas
+# ──────────────────────────────────────────────
+# Crear engine
+# ──────────────────────────────────────────────
+if DATABASE_URL.startswith("sqlite"):
     engine = create_engine(
         DATABASE_URL,
-        poolclass=NullPool,
+        connect_args={"check_same_thread": False},
         echo=False,
-        connect_args={"connect_timeout": 10}
+    )
+elif ENV == "production":
+    engine = create_engine(
+        DATABASE_URL,
+        poolclass=pool.NullPool,
+        echo=False,
+        connect_args={"connect_timeout": 10},
     )
 else:
-    # En desarrollo: pool normal para mejor performance
     engine = create_engine(
         DATABASE_URL,
         echo=os.getenv("SQL_ECHO", "false").lower() == "true",
@@ -52,13 +59,6 @@ SessionLocal = sessionmaker(
 
 
 def get_db() -> Generator[Session, None, None]:
-    """
-    Dependency para FastAPI que proporciona una sesión de BD.
-    Uso:
-        @app.get("/items")
-        async def read_items(db: Session = Depends(get_db)):
-            ...
-    """
     db = SessionLocal()
     try:
         yield db
@@ -70,40 +70,29 @@ def get_db() -> Generator[Session, None, None]:
 
 
 def init_db() -> None:
-    """
-    Crear todas las tablas en la BD.
-    Llamar después de importar todos los modelos.
-    """
-    print("Creando tablas en PostgreSQL...")
+    """Crear todas las tablas."""
+    # Importar modelos legacy para que SQLAlchemy los registre
+    from models import crm as _crm_legacy  # noqa: F401
+    print("Creando tablas...")
     try:
         Base.metadata.create_all(bind=engine)
-        print("✅ Tablas creadas exitosamente")
+        print("✅ Tablas creadas")
     except Exception as e:
         print(f"❌ Error creando tablas: {e}")
         raise
 
 
 def drop_all_tables() -> None:
-    """
-    PELIGRO: Eliminar todas las tablas (solo para desarrollo).
-    Nunca usar en producción.
-    """
     if ENV != "development":
-        raise RuntimeError("Solo puedes hacer DROP en desarrollo")
-
-    print("⚠️  Eliminando TODAS las tablas...")
+        raise RuntimeError("Solo en desarrollo")
     Base.metadata.drop_all(bind=engine)
-    print("✅ Tablas eliminadas")
 
 
-# Health check para verificar conexión
 def check_db_connection() -> bool:
-    """Verificar que la BD está accesible"""
     try:
-        with SessionLocal() as db:
-            db.execute("SELECT 1")
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
         return True
     except Exception as e:
-        print(f"❌ DB connection error: {e}")
+        print(f"❌ DB error: {e}")
         return False
-

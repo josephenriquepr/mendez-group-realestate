@@ -15,8 +15,8 @@ class TimestampMixin:
 
 class UUIDMixin:
     """Usar UUID como primary key en lugar de integers"""
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id = Column(UUID(), primary_key=True, default=uuid.uuid4)
 
 class TenantMixin:
     """Agregar tenant_id a modelos para multi-tenant"""
-    tenant_id = Column(UUID(as_uuid=True), nullable=False)
+    tenant_id = Column(UUID(), nullable=False)

@@ -1,10 +1,9 @@
 """
 Modelos CRM - Contact, Campaign, Task, UsageLog
 """
-from sqlalchemy import Column, String, Text, Date, ForeignKey, Index, Integer, func
+from sqlalchemy import Column, String, Text, Date, DateTime, ForeignKey, Index, Integer, func, UUID
 from sqlalchemy.orm import relationship
 from models.base import Base, UUIDMixin, TimestampMixin, TenantMixin
-from uuid import UUID
 from datetime import datetime, date
 
 class Contact(Base, UUIDMixin, TimestampMixin, TenantMixin):
@@ -14,8 +13,8 @@ class Contact(Base, UUIDMixin, TimestampMixin, TenantMixin):
     """
     __tablename__ = "contacts"
 
-    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False)
-    property_id = Column(UUID(as_uuid=True), ForeignKey("properties.id", ondelete="SET NULL"), nullable=True)
+    tenant_id = Column(UUID(), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False)
+    property_id = Column(UUID(), ForeignKey("properties.id", ondelete="SET NULL"), nullable=True)
 
     # Información de contacto
     name = Column(String(255), nullable=False)
@@ -49,7 +48,7 @@ class Campaign(Base, UUIDMixin, TimestampMixin, TenantMixin):
     """
     __tablename__ = "campaigns"
 
-    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False)
+    tenant_id = Column(UUID(), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False)
 
     # Información
     name = Column(String(255), nullable=False)
@@ -82,8 +81,8 @@ class Task(Base, UUIDMixin, TimestampMixin, TenantMixin):
     """
     __tablename__ = "tasks"
 
-    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False)
-    assigned_to = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+    tenant_id = Column(UUID(), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False)
+    assigned_to = Column(UUID(), ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
 
     # Información
     title = Column(String(255), nullable=False)
@@ -118,7 +117,7 @@ class UsageLog(Base, UUIDMixin, TimestampMixin, TenantMixin):
     """
     __tablename__ = "usage_logs"
 
-    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False)
+    tenant_id = Column(UUID(), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False)
 
     # Feature tracking
     feature = Column(String(100), nullable=False)  # 'generate_description', 'generate_instagram', etc

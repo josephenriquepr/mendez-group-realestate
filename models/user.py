@@ -1,11 +1,10 @@
 """
 Modelo User - Usuarios dentro de cada Tenant
 """
-from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, Index
+from sqlalchemy import Column, String, Boolean, DateTime, ForeignKey, Index, Integer, UUID
 from sqlalchemy.orm import relationship
 from models.base import Base, UUIDMixin, TimestampMixin
 from passlib.context import CryptContext
-from uuid import UUID
 
 # Contexto para hash de passwords
 pwd_context = CryptContext(
@@ -21,7 +20,7 @@ class User(Base, UUIDMixin, TimestampMixin):
     """
     __tablename__ = "users"
 
-    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False)
+    tenant_id = Column(UUID(), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False)
     email = Column(String(255), nullable=False, index=True)
     password_hash = Column(String(255), nullable=False)
     full_name = Column(String(255), nullable=True)
@@ -38,7 +37,6 @@ class User(Base, UUIDMixin, TimestampMixin):
 
     # Relationships
     tenant = relationship("Tenant", back_populates="users")
-    tasks = relationship("Task", back_populates="assigned_user", foreign_keys="Task.assigned_to")
 
     # Índices
     __table_args__ = (

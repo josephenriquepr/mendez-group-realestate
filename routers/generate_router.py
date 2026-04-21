@@ -14,7 +14,7 @@ from datetime import datetime, date
 from database import get_db
 from auth import get_current_user, get_current_tenant
 from models import User, Tenant, Property, PropertyPhoto, UsageLog
-from services.openai_service import generate_description_with_ai, generate_instagram_copy_with_ai
+from services.openai_service import generate_content as _generate_content_ai
 
 router = APIRouter(prefix="/api", tags=["generate"])
 

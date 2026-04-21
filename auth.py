@@ -3,7 +3,7 @@ Autenticación y autorización con JWT.
 Valida tokens y asegura que los usuarios solo ven sus datos.
 """
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthCredentials
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials as HTTPAuthCredentials
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from typing import Optional, Tuple

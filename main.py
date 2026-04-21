@@ -10,7 +10,13 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from database import init_db, check_db_connection
-from routers import auth_router, generate_router
+
+try:
+    from routers import auth_router, generate_router
+    NEW_ROUTERS_AVAILABLE = True
+except Exception as _e:
+    print(f"⚠️  Routers nuevos no disponibles: {_e}")
+    NEW_ROUTERS_AVAILABLE = False
 
 # Importar routers antiguos (mantenidos por compatibilidad temporal)
 try:
@@ -90,11 +96,9 @@ async def health_check():
 
 # ============= NUEVOS ROUTERS (MULTI-TENANT) =============
 
-# Auth (registro, login, etc)
-app.include_router(auth_router.router)
-
-# Generate (generar contenido con IA)
-app.include_router(generate_router.router)
+if NEW_ROUTERS_AVAILABLE:
+    app.include_router(auth_router.router)
+    app.include_router(generate_router.router)
 
 
 # ============= ROUTERS ANTIGUOS (COMPATIBILIDAD TEMPORAL) =============

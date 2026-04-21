@@ -14,3 +14,7 @@ uploads/*
 
 video/node_modules/
 .claude/
+
+# Keep video source but not build artifacts
+video/dist/
+video/public/assets/

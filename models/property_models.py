@@ -1,10 +1,9 @@
 """
 Modelos Property, PropertyPhoto - Propiedades inmobiliarias
 """
-from sqlalchemy import Column, String, Integer, Float, Text, ForeignKey, Index, DateTime, func, Boolean
+from sqlalchemy import Column, String, Integer, Float, Text, ForeignKey, Index, DateTime, func, Boolean, UUID
 from sqlalchemy.orm import relationship
 from models.base import Base, UUIDMixin, TimestampMixin, TenantMixin
-from uuid import UUID
 
 class Property(Base, UUIDMixin, TimestampMixin, TenantMixin):
     """
@@ -14,7 +13,7 @@ class Property(Base, UUIDMixin, TimestampMixin, TenantMixin):
     __tablename__ = "properties"
 
     # Foreign key al tenant
-    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False)
+    tenant_id = Column(UUID(), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False)
 
     # Información básica
     address = Column(String(500), nullable=False)
@@ -44,7 +43,6 @@ class Property(Base, UUIDMixin, TimestampMixin, TenantMixin):
     # Relationships
     tenant = relationship("Tenant", back_populates="properties")
     photos = relationship("PropertyPhoto", back_populates="property", cascade="all, delete-orphan")
-    contacts = relationship("Contact", back_populates="property")
 
     # Índices
     __table_args__ = (
@@ -63,8 +61,8 @@ class PropertyPhoto(Base, UUIDMixin, TimestampMixin, TenantMixin):
     """
     __tablename__ = "property_photos"
 
-    property_id = Column(UUID(as_uuid=True), ForeignKey("properties.id", ondelete="CASCADE"), nullable=False)
-    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False)
+    property_id = Column(UUID(), ForeignKey("properties.id", ondelete="CASCADE"), nullable=False)
+    tenant_id = Column(UUID(), ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False)
 
     # URL de la foto (local o en cloud)
     photo_url = Column(String(500), nullable=False)
